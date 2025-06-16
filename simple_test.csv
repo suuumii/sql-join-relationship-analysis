@@ -1,0 +1,2 @@
+table1,column1,column_definition1,table2,column2,column_definition2
+u,id,INT PRIMARY KEY,p,user_id,INT FOREIGN KEY

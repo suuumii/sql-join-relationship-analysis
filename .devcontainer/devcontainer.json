@@ -1,0 +1,14 @@
+{
+  "name": "SQL Join Relationship Analysis",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": ["anthropic.claude-code"]
+    }
+  },
+  "forwardPorts": [],
+  "postCreateCommand": ""
+}
