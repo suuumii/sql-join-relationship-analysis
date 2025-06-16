@@ -1,0 +1,16 @@
+=== SQL フォルダ解析サマリー ===
+
+解析ファイル数: 3
+総関係数: 5
+
+=== 検出された関係 ===
+  1. oi.product_id (INT FOREIGN KEY) -> p.product_id (INT FOREIGN KEY)
+  2. o.customer_id (INT FOREIGN KEY) -> c.customer_id (INT FOREIGN KEY)
+  3. o.order_id (INT FOREIGN KEY) -> oi.order_id (INT FOREIGN KEY)
+  4. p.category_id (INT FOREIGN KEY) -> c.category_id (INT FOREIGN KEY)
+  5. u.user_id (INT FOREIGN KEY) -> o.user_id (INT FOREIGN KEY)
+
+=== 解析ファイル一覧 ===
+- order_details.sql
+- products_categories.sql
+- users_orders.sql

@@ -1,18 +1,16 @@
-# SQL JOIN Relationship Analysis Tool
+# SQL Folder Analysis Tool
 
-PythonでSQLクエリのJOIN関係を解析し、テーブル間の親子関係を特定するツールです。
+**フォルダ内のSQLファイルを一括解析**し、テーブル間のJOIN関係を特定するツールです。
 
-## 機能
+## 主な機能
 
-- **sqlglot**を使用したSQL解析（MySQL方言対応）
-- 複雑なJOIN構文の解析：
-  - サブクエリ内のJOIN
-  - USING句
-  - NATURAL JOIN
-  - 複数テーブルのFROM句 + WHERE句での結合条件
-- 外部キー命名規則（`*_id`）から親子関係を自動推測
-- CSV形式での結果出力
-- NetworkXによるテーブル関係図の生成
+- **フォルダ一括解析**: 指定フォルダ内の全`.sql`ファイルを自動解析
+- **再帰的解析**: サブフォルダも含めて全SQLファイルを処理
+- **関係統合**: 複数ファイルから重複を排除した関係を抽出
+- **多様なJOIN対応**: INNER, LEFT, RIGHT JOIN、USING、NATURAL、カンマ結合
+- **複雑クエリ対応**: サブクエリ、ウィンドウ関数、集計処理
+- **外部キー推測**: `*_id`命名規則から親子関係を自動推測
+- **多形式出力**: CSV、グラフ画像、サマリーテキスト
 
 ## インストール
 
@@ -22,81 +20,21 @@ pip install -r requirements.txt
 
 ## 使用方法
 
-### 基本的な使用方法
+### フォルダ内SQLファイルの一括解析
 
 ```python
-from sql_join_analyzer import SQLJoinAnalyzer
+from folder_analyzer import FolderSQLAnalyzer
 
-analyzer = SQLJoinAnalyzer()
+folder_analyzer = FolderSQLAnalyzer()
 
-# SQL クエリを解析
-sql = """
-SELECT u.name, p.title
-FROM users u
-JOIN posts p ON u.id = p.user_id
-"""
+# 単一フォルダ解析
+results = folder_analyzer.analyze_folder("sql_queries_folder")
 
-relationships = analyzer.analyze_sql(sql)
+# サブフォルダを含む再帰的解析
+results = folder_analyzer.analyze_with_subdirectories("root_folder")
 
-# CSV出力
-analyzer.export_to_csv('relationships.csv')
-
-# グラフ可視化
-analyzer.generate_graph_visualization('graph.png')
-```
-
-### 複数クエリの一括解析
-
-```python
-queries = [
-    "SELECT * FROM users u JOIN posts p ON u.id = p.user_id",
-    "SELECT * FROM orders o, customers c WHERE o.customer_id = c.id"
-]
-
-all_relationships = analyzer.analyze_multiple_queries(queries)
-```
-
-## 対応するSQL構文
-
-### 1. 標準的なJOIN
-```sql
-SELECT u.name, p.title
-FROM users u
-INNER JOIN posts p ON u.id = p.user_id
-LEFT JOIN categories c ON p.category_id = c.id
-```
-
-### 2. USING句
-```sql
-SELECT e.name, d.name
-FROM employees e
-JOIN departments d USING (department_id)
-```
-
-### 3. NATURAL JOIN
-```sql
-SELECT *
-FROM employees
-NATURAL JOIN departments
-```
-
-### 4. FROM句での複数テーブル + WHERE条件
-```sql
-SELECT o.id, c.name, p.name
-FROM orders o, customers c, products p
-WHERE o.customer_id = c.id AND o.product_id = p.id
-```
-
-### 5. サブクエリ内のJOIN
-```sql
-SELECT u.name, stats.post_count
-FROM users u
-LEFT JOIN (
-    SELECT user_id, COUNT(*) as post_count
-    FROM posts p
-    JOIN categories c ON p.category_id = c.id
-    GROUP BY user_id
-) stats ON u.id = stats.user_id
+# 結果をエクスポート
+folder_analyzer.export_results(prefix="my_analysis")
 ```
 
 ## 出力形式
@@ -108,36 +46,31 @@ users,id,INT PRIMARY KEY,posts,user_id,INT FOREIGN KEY
 posts,category_id,INT FOREIGN KEY,categories,id,INT PRIMARY KEY
 ```
 
-### 関係情報の推測ルール
+### PNG画像出力
+- NetworkXによるテーブル関係図
+- ノード: テーブル名
+- エッジ: JOIN関係（矢印付き）
 
-1. **外部キー推測**: `*_id` パターンから親子関係を推測
-2. **カラム型推測**: 
-   - `id` → `INT PRIMARY KEY`
-   - `*_id` → `INT FOREIGN KEY`
-   - `*_at`, `*_time` → `DATETIME`
-   - `*_date` → `DATE`
-   - `*_count`, `*_num` → `INT`
-   - `*_flag`, `is_*` → `BOOLEAN`
-   - その他 → `VARCHAR(255)`
+### TXT概要出力
+- 解析したファイル一覧
+- 発見された関係の詳細リスト
+- 統計情報（ファイル数、関係数、テーブル数）
 
 ## 実行例
 
 ```bash
-# サンプル実行（推奨）
-python examples/example_usage.py
+# フォルダ解析デモ（推奨）
+python examples/folder_demo.py
 
-# 基本テスト
-python tests/simple_test.py
+# フォルダ解析（コマンドライン）
+python folder_analyzer.py
 
-# 包括テスト
-python tests/final_test.py
-
-# 個別使用
+# サンプルSQLファイルで解析テスト
 python -c "
-from sql_join_analyzer import SQLJoinAnalyzer
-analyzer = SQLJoinAnalyzer()
-relationships = analyzer.analyze_sql('SELECT u.name, p.title FROM users u JOIN posts p ON u.id = p.user_id')
-print(f'Found {len(relationships)} relationships')
+from folder_analyzer import FolderSQLAnalyzer
+analyzer = FolderSQLAnalyzer()
+analyzer.analyze_folder('input_sample')
+analyzer.export_results(prefix='sample_test')
 "
 ```
 
@@ -145,26 +78,34 @@ print(f'Found {len(relationships)} relationships')
 
 ```
 sql-join-relationship-analysis/
-├── sql_join_analyzer.py      # メインのアナライザークラス
+├── sql_join_analyzer.py      # ベースアナライザークラス
+├── folder_analyzer.py        # フォルダ一括解析ツール（メイン）
 ├── requirements.txt          # 依存関係
 ├── README.md                 # このファイル
+├── .gitignore               # Git除外設定
 ├── examples/                 # 使用例
 │   ├── __init__.py
-│   └── example_usage.py      # 使用例とサンプルケース
-├── tests/                    # テストファイル
-│   ├── __init__.py
-│   ├── test_queries.py       # サンプルクエリ集
-│   ├── final_test.py         # 包括テスト
-│   ├── simple_test.py        # 基本テスト
-│   ├── test_visualization.py # 可視化テスト
-│   └── debug_*.py            # デバッグファイル
+│   └── folder_demo.py        # フォルダ解析デモ
+├── input_sample/             # サンプルSQLファイル
+│   ├── README.md             # サンプルファイル説明
+│   ├── user_management.sql   # ユーザー管理
+│   ├── order_processing.sql  # 注文処理
+│   ├── employee_hierarchy.sql # 従業員階層
+│   ├── inventory_management.sql # 在庫管理
+│   ├── sales_analytics.sql   # 売上分析
+│   ├── blog_content.sql      # ブログコンテンツ
+│   ├── financial_transactions.sql # 金融取引
+│   ├── legacy_comma_joins.sql # レガシー結合
+│   └── complex_subqueries.sql # 複雑なサブクエリ
 └── output/                   # 出力ファイル
     ├── .gitkeep
     └── (生成されたCSVやPNGファイル)
 ```
 
-## 制限事項
+## 特徴
 
-- スキーマ情報が不明な場合、カラム型は命名規則から推測
-- NATURAL JOINは具体的なカラム名を特定できない場合がある
-- 複雑なサブクエリや動的SQLには対応していない場合がある
+- **大量ファイル対応**: 数百〜数千のSQLファイルも効率的に処理
+- **重複関係排除**: 複数ファイル間の同一関係を自動で統合
+- **多様なSQL構文**: レガシーなカンマ結合から最新のウィンドウ関数まで対応
+- **視覚的出力**: テーブル関係図で複雑な依存関係を一目で把握
+- **詳細レポート**: ファイル別解析 + 全体統計の2段階レポート

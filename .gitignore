@@ -27,6 +27,11 @@ output/*.png
 output/*.json
 !output/.gitkeep
 
+# Keep input samples
+!input_sample/
+!input_sample/*.sql
+!input_sample/README.md
+
 # IDE
 .vscode/
 .idea/

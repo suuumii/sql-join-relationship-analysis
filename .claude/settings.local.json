@@ -11,7 +11,9 @@
       "Bash(find:*)",
       "Bash(rm:*)",
       "Bash(tree:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

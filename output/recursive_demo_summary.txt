@@ -1,0 +1,18 @@
+=== SQL フォルダ解析サマリー ===
+
+解析ファイル数: 0
+総関係数: 10
+
+=== 検出された関係 ===
+  1. u.user_id (INT FOREIGN KEY) -> p.author_id (INT FOREIGN KEY)
+  2. u.user_id (INT FOREIGN KEY) -> c.user_id (INT FOREIGN KEY)
+  3. u.user_id (INT FOREIGN KEY) -> l.user_id (INT FOREIGN KEY)
+  4. oi.product_id (INT FOREIGN KEY) -> p.product_id (INT FOREIGN KEY)
+  5. o.customer_id (INT FOREIGN KEY) -> c.customer_id (INT FOREIGN KEY)
+  6. o.order_id (INT FOREIGN KEY) -> oi.order_id (INT FOREIGN KEY)
+  7. p.category_id (INT FOREIGN KEY) -> c.category_id (INT FOREIGN KEY)
+  8. u.user_id (INT FOREIGN KEY) -> o.user_id (INT FOREIGN KEY)
+  9. employees.department_id (INT FOREIGN KEY) -> departments.department_id (INT FOREIGN KEY)
+ 10. emp.manager_id (INT FOREIGN KEY) -> mgr.employee_id (INT FOREIGN KEY)
+
+=== 解析ファイル一覧 ===
