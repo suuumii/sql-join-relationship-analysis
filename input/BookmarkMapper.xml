@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BookmarkMapper">
+
+    <select id="getBookmark" resultType="com.example.dto.BookmarkDto">
+        SELECT 
+            b.bookmark_id,
+            b.user_id,
+            b.destination_id,
+            b.created_at,
+            b.updated_at
+        FROM bookmarks b
+        left join memo_destination md
+        on b.destination_id = md.id
+        <if test="user_id != null">
+            and b.user_id = md.user_id
+        </if>
+    </select>
+</mapper>
