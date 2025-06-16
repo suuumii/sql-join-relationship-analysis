@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ### フォルダ内SQLファイルの一括解析
 
 ```python
-from folder_analyzer import FolderSQLAnalyzer
+from lib.folder_analyzer import FolderSQLAnalyzer
 
 folder_analyzer = FolderSQLAnalyzer()
 
@@ -59,18 +59,21 @@ posts,category_id,INT FOREIGN KEY,categories,id,INT PRIMARY KEY
 ## 実行例
 
 ```bash
-# フォルダ解析デモ（推奨）
+# inputフォルダ解析（推奨）
+python analyze_input.py
+
+# フォルダ解析デモ
 python examples/folder_demo.py
 
 # フォルダ解析（コマンドライン）
 python folder_analyzer.py
 
-# サンプルSQLファイルで解析テスト
+# カスタムフォルダ解析
 python -c "
-from folder_analyzer import FolderSQLAnalyzer
+from lib.folder_analyzer import FolderSQLAnalyzer
 analyzer = FolderSQLAnalyzer()
-analyzer.analyze_folder('input_sample')
-analyzer.export_results(prefix='sample_test')
+analyzer.analyze_folder('your_sql_folder')
+analyzer.export_results(prefix='your_analysis')
 "
 ```
 
@@ -78,16 +81,18 @@ analyzer.export_results(prefix='sample_test')
 
 ```
 sql-join-relationship-analysis/
-├── sql_join_analyzer.py      # ベースアナライザークラス
-├── folder_analyzer.py        # フォルダ一括解析ツール（メイン）
+├── analyze_input.py          # メイン実行スクリプト
 ├── requirements.txt          # 依存関係
 ├── README.md                 # このファイル
 ├── .gitignore               # Git除外設定
+├── lib/                      # ライブラリフォルダ
+│   ├── __init__.py           # パッケージ初期化
+│   ├── sql_join_analyzer.py  # ベースアナライザークラス
+│   └── folder_analyzer.py    # フォルダ一括解析ツール
 ├── examples/                 # 使用例
 │   ├── __init__.py
 │   └── folder_demo.py        # フォルダ解析デモ
-├── input_sample/             # サンプルSQLファイル
-│   ├── README.md             # サンプルファイル説明
+├── input/                    # 入力SQLファイル
 │   ├── user_management.sql   # ユーザー管理
 │   ├── order_processing.sql  # 注文処理
 │   ├── employee_hierarchy.sql # 従業員階層

@@ -1,1 +1,2 @@
-# Keep this directory
+# This file ensures the output directory is tracked by git
+# Generated files will be placed here during analysis

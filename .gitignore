@@ -25,6 +25,8 @@ MANIFEST
 output/*.csv
 output/*.png
 output/*.json
+output/*.html
+output/*.txt
 !output/.gitkeep
 
 # Keep input samples

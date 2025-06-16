@@ -7,7 +7,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from folder_analyzer import FolderSQLAnalyzer
+from lib.folder_analyzer import FolderSQLAnalyzer
 
 def create_sample_files():
     """サンプルSQLファイルを作成"""
