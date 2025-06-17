@@ -14,6 +14,16 @@
 
 ## インストール
 
+### Dev Containerを使用（推奨）
+
+VS Code + Dev Containerを使用すると、環境構築が自動化されます：
+
+1. VS Codeでプロジェクトフォルダを開く
+2. 「Reopen in Container」を選択
+3. 自動でPython環境とすべての依存関係がインストールされます
+
+### 手動インストール
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -85,6 +95,10 @@ sql-join-relationship-analysis/
 ├── requirements.txt          # 依存関係
 ├── README.md                 # このファイル
 ├── .gitignore               # Git除外設定
+├── .dockerignore            # Docker除外設定
+├── .devcontainer/           # Dev Container設定
+│   ├── devcontainer.json    # 開発環境設定
+│   └── Dockerfile           # コンテナ定義
 ├── lib/                      # ライブラリフォルダ
 │   ├── __init__.py           # パッケージ初期化
 │   ├── sql_join_analyzer.py  # ベースアナライザークラス

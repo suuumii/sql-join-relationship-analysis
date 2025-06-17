@@ -3,12 +3,35 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
   "customizations": {
     "vscode": {
-      "extensions": ["anthropic.claude-code"]
+      "extensions": [
+        "anthropic.claude-code",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.flake8"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "python.sortImports.args": ["--profile", "black"],
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": true
+        }
+      }
     }
   },
   "forwardPorts": [],
-  "postCreateCommand": ""
+  "postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt",
+  "remoteUser": "vscode"
 }
