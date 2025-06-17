@@ -72,11 +72,14 @@ posts,category_id,INT FOREIGN KEY,categories,id,INT PRIMARY KEY
 # inputフォルダ解析（推奨）
 python analyze_input.py
 
+# 既存CSVからHTML生成
+python csv_to_html.py output/relationships.csv visualization.html
+
+# CSVからHTML生成デモ
+python examples/csv_to_html_demo.py
+
 # フォルダ解析デモ
 python examples/folder_demo.py
-
-# フォルダ解析（コマンドライン）
-python folder_analyzer.py
 
 # カスタムフォルダ解析
 python -c "
@@ -87,11 +90,32 @@ analyzer.export_results(prefix='your_analysis')
 "
 ```
 
+### CSVからHTML生成
+
+既存のCSVファイルから単独でHTMLビジュアライゼーションを生成できます：
+
+```bash
+# 基本的な使用方法
+python csv_to_html.py input.csv output.html
+
+# オプション形式
+python csv_to_html.py data.csv --output result.html
+
+# 自動ファイル名生成
+python csv_to_html.py relationships.csv
+```
+
+**CSVファイル形式要件:**
+- 必須カラム: `table1`, `column1`, `table2`, `column2`
+- ヘッダー行必須
+- UTF-8エンコーディング
+
 ## ファイル構成
 
 ```
 sql-join-relationship-analysis/
 ├── analyze_input.py          # メイン実行スクリプト
+├── csv_to_html.py           # CSV→HTML変換ツール
 ├── requirements.txt          # 依存関係
 ├── README.md                 # このファイル
 ├── .gitignore               # Git除外設定
@@ -105,7 +129,8 @@ sql-join-relationship-analysis/
 │   └── folder_analyzer.py    # フォルダ一括解析ツール
 ├── examples/                 # 使用例
 │   ├── __init__.py
-│   └── folder_demo.py        # フォルダ解析デモ
+│   ├── folder_demo.py        # フォルダ解析デモ
+│   └── csv_to_html_demo.py   # CSV→HTML変換デモ
 ├── input/                    # 入力SQLファイル
 │   ├── user_management.sql   # ユーザー管理
 │   ├── order_processing.sql  # 注文処理
