@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.MultiColumnJoinMapper">
+
+    <select id="getOrderWithMultipleColumns" resultType="com.example.dto.OrderDto">
+        SELECT 
+            o.order_id,
+            o.order_date,
+            ol.line_number,
+            ol.quantity,
+            p.product_name
+        FROM orders o
+        INNER JOIN order_lines ol ON o.order_id = ol.order_id 
+                                 AND o.company_id = ol.company_id
+        INNER JOIN products p ON ol.product_id = p.product_id
+        WHERE o.status = #{status}
+    </select>
+
+    <select id="getInventoryWithTripleJoin" resultType="com.example.dto.InventoryDto">
+        SELECT 
+            i.item_id,
+            i.item_name,
+            s.stock_quantity,
+            w.warehouse_name,
+            l.location_name
+        FROM inventory_items i
+        LEFT JOIN stock s ON i.item_id = s.item_id 
+                         AND i.location_id = s.location_id 
+                         AND i.batch_number = s.batch_number
+        LEFT JOIN warehouses w ON s.warehouse_id = w.warehouse_id
+        LEFT JOIN locations l ON i.location_id = l.location_id
+        <if test="warehouseId != null">
+            AND s.warehouse_id = #{warehouseId}
+        </if>
+    </select>
+
+    <select id="getComplexTransactionData" resultType="com.example.dto.TransactionDto">
+        SELECT 
+            t.transaction_id,
+            t.amount,
+            a.account_number,
+            b.branch_name,
+            c.customer_name
+        FROM transactions t
+        INNER JOIN accounts a ON t.account_id = a.account_id 
+                             AND t.bank_code = a.bank_code
+                             AND t.branch_code = a.branch_code
+                             AND t.company_id = a.company_id
+        INNER JOIN branches b ON a.branch_code = b.branch_code 
+                             AND a.bank_code = b.bank_code
+        INNER JOIN customers c ON a.customer_id = c.customer_id 
+                              AND a.company_id = c.company_id
+        WHERE t.transaction_date BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+</mapper>

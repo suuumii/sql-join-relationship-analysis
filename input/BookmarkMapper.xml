@@ -12,7 +12,7 @@
         FROM bookmarks b
         left join memo_destination md
         on b.destination_id = md.id
-        <if test="user_id != null">
+        <if test="andFlg != null">
             and b.user_id = md.user_id
         </if>
     </select>
